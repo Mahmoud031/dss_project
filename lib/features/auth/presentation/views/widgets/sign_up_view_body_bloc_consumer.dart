@@ -1,0 +1,35 @@
+import 'package:dss_project/core/helper_functions/build_error_bar.dart';
+import 'package:dss_project/features/auth/presentation/cubits/sign_up_cubit/signup_cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+
+import 'sign_up_view_body.dart';
+
+class SignUpViewBodyBlocConsumer extends StatelessWidget {
+  const SignUpViewBodyBlocConsumer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<SignupCubit, SignupState>(
+      listener: (context, state) {
+        if (state is SignupFailure) {
+          buildErrorBar(context, state.message);
+        } else if (state is SignupSuccess) {
+          buildErrorBar(context, 'Signup Success');
+            Future.delayed(const Duration(seconds: 1), () {
+              Navigator.pop(context);
+            });
+        }
+      },
+      builder: (context, state) {
+        return ModalProgressHUD(
+            inAsyncCall: state is SignupLoading ? true : false,
+            opacity: 0.5,
+            child: const SignUpViewBody());
+      },
+    );
+  }
+}
