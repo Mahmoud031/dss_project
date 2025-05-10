@@ -8,7 +8,7 @@ class TermsAndConditionsViewBody extends StatelessWidget {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
+        child: Column( 
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('1. Use of Information'),

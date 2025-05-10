@@ -79,7 +79,7 @@ class _ChatViewBodyState extends State<ChatViewBody> {
   final List<Map<String, dynamic>> _messages = [];
   final Map<String, String> _userData = {};
   final ScrollController _scrollController =
-      ScrollController(); // <--- هنا ضفنا الكنترولر
+      ScrollController(); 
   String? _currentQuestion;
   List<String> _currentOptions = [];
   bool _isLoading = false;
@@ -156,7 +156,7 @@ class _ChatViewBodyState extends State<ChatViewBody> {
       );
     }
 
-    _scrollToBottom(); // بعد ما تسأل انزل لتحت
+    _scrollToBottom(); 
   }
 
   void _setQuestion(String question, List<String> options) {
@@ -289,7 +289,7 @@ class _ChatViewBodyState extends State<ChatViewBody> {
         children: [
           Expanded(
             child: ListView.builder(
-              controller: _scrollController, // <--- ربط الكنترولر هنا
+              controller: _scrollController, 
               padding: const EdgeInsets.all(16),
               itemCount: _messages.length,
               itemBuilder: (context, index) {

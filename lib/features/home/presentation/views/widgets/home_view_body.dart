@@ -1,6 +1,10 @@
 import 'package:dss_project/core/utils/app_images.dart';
-import 'package:dss_project/core/widgets/custom_button.dart';
 import 'package:dss_project/features/chat/presentation/views/widgets/chat_view_body.dart';
+import 'package:dss_project/features/faq/presentation/views/faq_view.dart';
+import 'package:dss_project/features/home/presentation/views/widgets/home_widgets/feature_container.dart';
+import 'package:dss_project/features/home/presentation/views/widgets/home_widgets/home_animations.dart';
+import 'package:dss_project/features/home/presentation/views/widgets/home_widgets/welcome_section.dart';
+import 'package:dss_project/features/tips/presentation/views/tips_and_advice_view.dart';
 import 'package:flutter/material.dart';
 
 class HomeViewBody extends StatefulWidget {
@@ -13,47 +17,16 @@ class HomeViewBody extends StatefulWidget {
 class _HomeViewBodyState extends State<HomeViewBody>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _imageAnimation;
-  late Animation<double> _titleAnimation;
-  late Animation<double> _descriptionAnimation;
-  late Animation<double> _buttonAnimation;
+  late HomeAnimations _animations;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 2000),
     );
-
-    _imageAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.0, 0.3, curve: Curves.easeOut),
-      ),
-    );
-
-    _titleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.3, 0.5, curve: Curves.easeOut),
-      ),
-    );
-
-    _descriptionAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.5, 0.7, curve: Curves.easeOut),
-      ),
-    );
-
-    _buttonAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.7, 1.0, curve: Curves.easeOut),
-      ),
-    );
-
+    _animations = HomeAnimations(_controller);
     _controller.forward();
   }
 
@@ -65,56 +38,35 @@ class _HomeViewBodyState extends State<HomeViewBody>
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Image
-          FadeTransition(
-            opacity: _imageAnimation,
-            child: Container(
-              height: 250,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(AppImages.homePageImage),
-                  fit: BoxFit.contain,
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: [
+            WelcomeSection(
+              imageAnimation: _animations.imageAnimation,
+              titleAnimation: _animations.titleAnimation,
+              descriptionAnimation: _animations.descriptionAnimation,
             ),
-          ),
-          const SizedBox(height: 40),
-          // Description
-          FadeTransition(
-            opacity: _titleAnimation,
-            child: const Text(
-              'Welcome to our Loan Prediction System',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
+            // Feature Containers
+            FeatureContainer(
+              title: 'Frequently Asked Questions',
+              description:
+                  'Find answers to common questions about loans and our system',
+              imagePath: AppImages.faqImage,
+              backgroundColor: Colors.blue,
+              onTap: () {
+                Navigator.pushNamed(context, FaqView.routeName);
+              },
+              animation: _animations.faqAnimation,
             ),
-          ),
-          const SizedBox(height: 20),
-          FadeTransition(
-            opacity: _descriptionAnimation,
-            child: const Text(
-              'Our advanced AI system helps you predict loan approval chances based on various factors. Get instant insights and make informed financial decisions.',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black54,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(height: 40),
-          // Chat Button
-          FadeTransition(
-            opacity: _buttonAnimation,
-            child: CustomButton(
-              onPressed: () {
+            FeatureContainer(
+              title: 'Chat with AI Assistant',
+              description:
+                  'Get personalized help and answers to your questions',
+              imagePath: AppImages.chatbotImage,
+              backgroundColor: Colors.purple,
+              onTap: () {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -122,11 +74,31 @@ class _HomeViewBodyState extends State<HomeViewBody>
                   ),
                 );
               },
-              text: 'Let`s chat',
-              size: const Size(200, 60),
+              animation: _animations.chatbotAnimation,
             ),
-          )
-        ],
+            FeatureContainer(
+              title: 'Loan Tips & Advice',
+              description: 'Learn how to improve your chances of loan approval',
+              imagePath: AppImages.tipsImage,
+              backgroundColor: Colors.teal,
+              onTap: () {
+                Navigator.pushNamed(context, TipsAndAdviceView.routeName);
+              },
+              animation: _animations.tipsAnimation,
+            ),
+            FeatureContainer(
+              title: 'Check Your Eligibility',
+              description: 'Quickly check if you qualify for a loan',
+              imagePath: AppImages.eligibilityImage,
+              backgroundColor: Colors.green,
+              onTap: () {
+                // Navigate to eligibility checker
+              },
+              animation: _animations.eligibilityAnimation,
+            ),
+            const SizedBox(height: 30),
+          ],
+        ),
       ),
     );
   }

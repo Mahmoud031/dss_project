@@ -10,9 +10,10 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         title: const Text(
           'Loan Prediction',
-          style: TextStyle(
+           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 24,
           ),
