@@ -1,4 +1,4 @@
-import 'package:dss_project/features/auth/domain/entities/user_entity.dart';
+
 
 abstract class DatabaseService {
   Future<void> addData(

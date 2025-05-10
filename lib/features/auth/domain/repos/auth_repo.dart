@@ -7,6 +7,13 @@ abstract class AuthRepo {
     required String email,
     required String password,
     required String name,
+    String? loanPurpose,
+    bool? isMarried,
+    String? dependents,
+    String? income,
+    String? loanAmount,
+    String? age,
+    String? creditHistory,
   });
   Future<Either<Failure, UserEntity>> signInWithEmailAndPassword({
     required String email,

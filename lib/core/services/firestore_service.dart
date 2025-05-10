@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dss_project/features/auth/data/models/user_model.dart';
-import 'package:dss_project/features/auth/domain/entities/user_entity.dart';
+
 
 import 'database_service.dart';
 

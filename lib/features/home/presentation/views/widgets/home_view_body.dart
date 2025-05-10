@@ -1,4 +1,5 @@
 import 'package:dss_project/core/utils/app_images.dart';
+import 'package:dss_project/features/chat/presentation/views/chat_view.dart';
 import 'package:dss_project/features/chat/presentation/views/widgets/chat_view_body.dart';
 import 'package:dss_project/features/faq/presentation/views/faq_view.dart';
 import 'package:dss_project/features/home/presentation/views/widgets/home_widgets/feature_container.dart';
@@ -66,14 +67,7 @@ class _HomeViewBodyState extends State<HomeViewBody>
                   'Get personalized help and answers to your questions',
               imagePath: AppImages.chatbotImage,
               backgroundColor: Colors.purple,
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ChatViewBody(),
-                  ),
-                );
-              },
+              onTap: () {},
               animation: _animations.chatbotAnimation,
             ),
             FeatureContainer(
@@ -92,7 +86,7 @@ class _HomeViewBodyState extends State<HomeViewBody>
               imagePath: AppImages.eligibilityImage,
               backgroundColor: Colors.green,
               onTap: () {
-                // Navigate to eligibility checker
+                Navigator.pushNamed(context, ChatView.routeName);
               },
               animation: _animations.eligibilityAnimation,
             ),
