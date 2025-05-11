@@ -1,8 +1,6 @@
 import 'package:dss_project/core/helper_functions/build_error_bar.dart';
-
 import 'package:dss_project/core/utils/app_text_styles.dart';
 import 'package:dss_project/core/widgets/custom_button.dart';
-import 'package:dss_project/core/widgets/custom_dropdown_field.dart';
 import 'package:dss_project/core/widgets/custom_text_field.dart';
 import 'package:dss_project/core/widgets/form_field_hint.dart';
 import 'package:dss_project/core/widgets/password_field.dart';
@@ -12,8 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'sign_in_link.dart';
 import 'terms_and_conditions.dart';
-import 'package:dss_project/main.dart';
-import 'package:dss_project/features/data_export/data/repositories/data_export_repository.dart';
 
 class SignUpViewBody extends StatefulWidget {
   const SignUpViewBody({super.key});
@@ -31,15 +27,6 @@ class _SignUpViewBodyState extends State<SignUpViewBody>
   late final AnimationController _controller;
   late final Animation<double> _fadeAnimation;
   late final Animation<Offset> _slideAnimation;
-
-  // Form field values
-  String? loanPurpose;
-  bool? isMarried;
-  String? dependents;
-  String? income;
-  String? loanAmount;
-  String? age;
-  String? creditHistory;
 
   @override
   void initState() {
@@ -129,106 +116,6 @@ class _SignUpViewBodyState extends State<SignUpViewBody>
                             hintText: 'Enter your password',
                           ),
                         ),
-                        _buildFormField(
-                          'Loan Purpose',
-                          CustomDropdownField(
-                            hintText: 'Select loan purpose',
-                            items: const [
-                              'EDUCATION',
-                              'HOMEIMPROVEMENT',
-                              'VENTURE',
-                              'PERSONAL',
-                              'MEDICAL',
-                              'DEBTCONSOLIDATION'
-                            ],
-                            onSaved: (value) => loanPurpose = value,
-                          ),
-                          hintText:
-                              'Select the purpose for which you need the loan',
-                        ),
-                        _buildFormField(
-                          'Marital Status',
-                          Row(
-                            children: [
-                              Expanded(
-                                child: RadioListTile<bool>(
-                                  title: const Text('Yes'),
-                                  value: true,
-                                  groupValue: isMarried,
-                                  onChanged: (value) {
-                                    setState(() => isMarried = value);
-                                  },
-                                ),
-                              ),
-                              Expanded(
-                                child: RadioListTile<bool>(
-                                  title: const Text('No'),
-                                  value: false,
-                                  groupValue: isMarried,
-                                  onChanged: (value) {
-                                    setState(() => isMarried = value);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          hintText: 'Please indicate if you are married or not',
-                        ),
-                        _buildFormField(
-                          'Number of Dependents',
-                          CustomDropdownField(
-                            hintText: 'Select number of dependents',
-                            items: const ['0', '1', '2', '3', '3+'],
-                            onSaved: (value) => dependents = value,
-                          ),
-                          hintText:
-                              'Select the number of people who depend on your income',
-                        ),
-                        _buildFormField(
-                          'Income Level',
-                          CustomDropdownField(
-                            hintText: 'Select income level',
-                            items: const ['low', 'medium', 'high'],
-                            onSaved: (value) => income = value,
-                          ),
-                          hintText:
-                              'low: less than 30,000\nmedium: 30,000 – 70,000\nhigh: more than 70,000',
-                        ),
-                        _buildFormField(
-                          'Loan Amount',
-                          CustomDropdownField(
-                            hintText: 'Select loan amount',
-                            items: const ['low', 'medium', 'high'],
-                            onSaved: (value) => loanAmount = value,
-                          ),
-                          hintText:
-                              'low: less than 3,200\nmedium: 3,200 – 9,450\nhigh: more than 9,450',
-                        ),
-                        _buildFormField(
-                          'Age Category',
-                          CustomDropdownField(
-                            hintText: 'Select age category',
-                            items: const ['young', 'middle-aged', 'old'],
-                            onSaved: (value) => age = value,
-                          ),
-                          hintText:
-                              'young: less than 22\nmiddle-aged: 22 – 50\nold: more than 50',
-                        ),
-                        _buildFormField(
-                          'Credit History',
-                          CustomDropdownField(
-                            hintText: 'Select credit history',
-                            items: const [
-                              'Credit Builder',
-                              'Developing Credit',
-                              'Established Credit',
-                              'Prime Credit'
-                            ],
-                            onSaved: (value) => creditHistory = value,
-                          ),
-                          hintText:
-                              'Credit Builder (0–3)\nDeveloping Credit (4–6)\nEstablished Credit (7–9)\nPrime Credit (10–13)',
-                        ),
                         const SizedBox(height: 20),
                         TermsAndConditions(
                           onChanged: (value) {
@@ -245,34 +132,14 @@ class _SignUpViewBodyState extends State<SignUpViewBody>
           const SizedBox(height: 20),
           CustomButton(
             text: 'Sign Up',
-            onPressed: () async {
+            onPressed: () {
               if (formKey.currentState!.validate()) {
                 formKey.currentState!.save();
                 if (isTermsAccepted) {
-                  // Store data in Google Sheets
-                  final repo = DataExportRepository(sheetsService);
-                  await repo.exportData({
-                    'Name': userName,
-                    'Email': email,
-                    'Loan Purpose': loanPurpose,
-                    'Marital Status': isMarried == true ? 'Yes' : 'No',
-                    'Dependents': dependents,
-                    'Income': income,
-                    'Loan Amount': loanAmount,
-                    'Age': age,
-                    'Credit History': creditHistory,
-                  });
                   context.read<SignupCubit>().createUserWithEmailAndPassword(
                         email: email,
                         password: password,
                         name: userName,
-                        loanPurpose: loanPurpose,
-                        isMarried: isMarried,
-                        dependents: dependents,
-                        income: income,
-                        loanAmount: loanAmount,
-                        age: age,
-                        creditHistory: creditHistory,
                       );
                 } else {
                   buildErrorBar(

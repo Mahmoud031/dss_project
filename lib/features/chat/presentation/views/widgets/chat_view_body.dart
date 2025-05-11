@@ -1,4 +1,6 @@
+import 'package:dss_project/features/data_export/data/repositories/data_export_repository.dart';
 import 'package:dss_project/features/home/presentation/views/home_view.dart';
+import 'package:dss_project/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 
@@ -78,8 +80,7 @@ class ChatViewBody extends StatefulWidget {
 class _ChatViewBodyState extends State<ChatViewBody> {
   final List<Map<String, dynamic>> _messages = [];
   final Map<String, String> _userData = {};
-  final ScrollController _scrollController =
-      ScrollController(); 
+  final ScrollController _scrollController = ScrollController();
   String? _currentQuestion;
   List<String> _currentOptions = [];
   bool _isLoading = false;
@@ -156,7 +157,7 @@ class _ChatViewBodyState extends State<ChatViewBody> {
       );
     }
 
-    _scrollToBottom(); 
+    _scrollToBottom();
   }
 
   void _setQuestion(String question, List<String> options) {
@@ -209,10 +210,21 @@ class _ChatViewBodyState extends State<ChatViewBody> {
             "Please predict my loan approval status based on my information.",
       );
 
+      // Convert the response to binary loan status
+      final loanStatus = _convertToLoanStatus(response);
+
+      // Add loan status to user data for Google Sheets
+      _userData['loan_status'] = loanStatus.toString();
+
+      // Export data to Google Sheets
+      final repo = DataExportRepository(sheetsService);
+      await repo.exportData(_userData);
+
       setState(() {
         _messages.add({
           "isUser": false,
           "message": response ?? "No answer, please try again later.",
+          "loanStatus": loanStatus,
         });
       });
     } catch (e) {
@@ -228,6 +240,33 @@ class _ChatViewBodyState extends State<ChatViewBody> {
       });
       _scrollToBottom();
     }
+  }
+
+  int _convertToLoanStatus(String? response) {
+    if (response == null) return -1; // Invalid response
+
+    // Convert to lowercase for case-insensitive matching
+    final lowerResponse = response.toLowerCase();
+
+    // Check for positive indicators
+    if (lowerResponse.contains('approved') ||
+        lowerResponse.contains('approve') ||
+        lowerResponse.contains('yes') ||
+        lowerResponse.contains('positive') ||
+        lowerResponse.contains('eligible')) {
+      return 1;
+    }
+
+    // Check for negative indicators
+    if (lowerResponse.contains('rejected') ||
+        lowerResponse.contains('reject') ||
+        lowerResponse.contains('no') ||
+        lowerResponse.contains('negative') ||
+        lowerResponse.contains('not eligible')) {
+      return 0;
+    }
+
+    return -1; // Unable to determine status
   }
 
   void _startNewChat() {
@@ -289,7 +328,7 @@ class _ChatViewBodyState extends State<ChatViewBody> {
         children: [
           Expanded(
             child: ListView.builder(
-              controller: _scrollController, 
+              controller: _scrollController,
               padding: const EdgeInsets.all(16),
               itemCount: _messages.length,
               itemBuilder: (context, index) {
