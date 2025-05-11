@@ -1,3 +1,4 @@
+import 'package:dss_project/features/ai_assistant/presentation/views/ai_assitant_view.dart';
 import 'package:dss_project/features/auth/presentation/views/sign_in_view.dart';
 import 'package:dss_project/features/auth/presentation/views/sign_up_view.dart';
 import 'package:dss_project/features/auth/presentation/views/terms_and_conditions_view.dart';
@@ -31,6 +32,8 @@ Route<dynamic> onGenerateRoutes(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const FaqView());
     case TipsAndAdviceView.routeName:
       return MaterialPageRoute(builder: (_) => const TipsAndAdviceView());
+    case AiAssitantView.routeName:
+      return MaterialPageRoute(builder: (_) => const AiAssitantView());
     default:
       return MaterialPageRoute(builder: (_) => const SplashView());
   }

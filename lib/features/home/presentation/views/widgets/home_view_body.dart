@@ -1,4 +1,5 @@
 import 'package:dss_project/core/utils/app_images.dart';
+import 'package:dss_project/features/ai_assistant/presentation/views/ai_assitant_view.dart';
 import 'package:dss_project/features/chat/presentation/views/chat_view.dart';
 import 'package:dss_project/features/chat/presentation/views/widgets/chat_view_body.dart';
 import 'package:dss_project/features/faq/presentation/views/faq_view.dart';
@@ -67,7 +68,9 @@ class _HomeViewBodyState extends State<HomeViewBody>
                   'Get personalized help and answers to your questions',
               imagePath: AppImages.chatbotImage,
               backgroundColor: Colors.purple,
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, AiAssitantView.routeName);
+              },
               animation: _animations.chatbotAnimation,
             ),
             FeatureContainer(

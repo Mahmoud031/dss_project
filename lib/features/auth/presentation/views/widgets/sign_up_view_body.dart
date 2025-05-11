@@ -12,6 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'sign_in_link.dart';
 import 'terms_and_conditions.dart';
+import 'package:dss_project/main.dart';
+import 'package:dss_project/features/data_export/data/repositories/data_export_repository.dart';
 
 class SignUpViewBody extends StatefulWidget {
   const SignUpViewBody({super.key});
@@ -243,10 +245,23 @@ class _SignUpViewBodyState extends State<SignUpViewBody>
           const SizedBox(height: 20),
           CustomButton(
             text: 'Sign Up',
-            onPressed: () {
+            onPressed: () async {
               if (formKey.currentState!.validate()) {
                 formKey.currentState!.save();
                 if (isTermsAccepted) {
+                  // Store data in Google Sheets
+                  final repo = DataExportRepository(sheetsService);
+                  await repo.exportData({
+                    'Name': userName,
+                    'Email': email,
+                    'Loan Purpose': loanPurpose,
+                    'Marital Status': isMarried == true ? 'Yes' : 'No',
+                    'Dependents': dependents,
+                    'Income': income,
+                    'Loan Amount': loanAmount,
+                    'Age': age,
+                    'Credit History': creditHistory,
+                  });
                   context.read<SignupCubit>().createUserWithEmailAndPassword(
                         email: email,
                         password: password,
